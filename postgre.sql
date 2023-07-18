@@ -45,14 +45,6 @@ CREATE TABLE PontoDeLazer (
     FOREIGN KEY (ponto_de_interesse_id) REFERENCES PontoDeInteresse (id)
 );
 
-CREATE TABLE Residencia (
-    id SERIAL PRIMARY KEY,
-    ponto_de_interesse_id INTEGER NOT NULL,
-    usuario_id INTEGER,
-    FOREIGN KEY (ponto_de_interesse_id) REFERENCES PontoDeInteresse (id),
-    FOREIGN KEY (usuario_id) REFERENCES Usuario (id)
-);
-
 CREATE TABLE Evento (
     id SERIAL PRIMARY KEY,
     ponto_de_lazer_id INTEGER NOT NULL,
@@ -70,6 +62,14 @@ CREATE TABLE Usuario (
     data_de_nascimento DATE NOT NULL
 );
 
+CREATE TABLE Residencia (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL,
+    ponto_de_interesse_id INTEGER NOT NULL,
+    FOREIGN KEY (ponto_de_interesse_id) REFERENCES PontoDeInteresse (id),
+    FOREIGN KEY (usuario_id) REFERENCES Usuario (id)
+);
+
 CREATE TABLE UsuarioAvaliador (
     id SERIAL PRIMARY KEY,
     usuario_id INTEGER NOT NULL UNIQUE,
@@ -83,6 +83,14 @@ CREATE TABLE Participacao (
     PRIMARY KEY (id_evento, id_usuario),
     FOREIGN KEY (id_evento) REFERENCES Evento (id),
     FOREIGN KEY (id_usuario) REFERENCES Usuario (id)
+);
+
+CREATE TABLE Moradia (
+    id_usuario INTEGER NOT NULL,
+    id_residencia INTEGER NOT NULL,
+    PRIMARY KEY (id_usuario, id_residencia),
+    FOREIGN KEY (id_usuario) REFERENCES Usuario (id),
+    FOREIGN KEY (id_residencia) REFERENCES Residencia (id)
 );
 
 CREATE TABLE Avaliacao (
@@ -130,10 +138,10 @@ INSERT INTO Bairro (nome, regiao) VALUES
     ('Bairro C', 'Região Leste');
 
 INSERT INTO Logradouro (bairro_id, cep, numero, complemento) VALUES
-    (1, '12345-678', 100, 'Bloco A'),
-    (1, '12345-678', 200, 'Bloco B'),
-    (2, '87654-321', 50, 'Casa 1'),
-    (3, '13579-246', 300, NULL);
+    (1, '12345678', 100, 'Bloco A'),
+    (1, '12345678', 200, 'Bloco B'),
+    (2, '87654321', 50, 'Casa 1'),
+    (3, '13579246', 300, NULL);
 
 INSERT INTO PontoDeInteresse (logradouro_id, nome, lat, lon) VALUES
     (1, 'Restaurante A', -23.5488, -46.6388),
@@ -149,17 +157,12 @@ INSERT INTO Categoria (nome, descricao) VALUES
 INSERT INTO EstabelecimentoComercial (ponto_de_interesse_id, horario_de_funcionamento, classificacao_preco, formas_de_pagamento) VALUES
     (1, 'Seg-Sex: 10h-20h; Sáb-Dom: 11h-18h', 4.5, 'Dinheiro, Cartão de Crédito'),
     (2, 'Seg-Sex: 8h-22h', 3.2, 'Dinheiro, Cartão de Débito, PIX'),
+    (3, 'Ter-Sex: 8h-14h', 2.2, 'Dinheiro'),
     (4, 'Seg-Sex: 6h-22h; Sáb: 8h-16h', 4.8, 'Cartão de Crédito, PIX');
 
 INSERT INTO PontoDeLazer (ponto_de_interesse_id, horario_de_funcionamento, atividades_disponiveis) VALUES
     (3, 'Todos os dias: 9h-22h', 'Quadras de esporte, Playground'),
     (4, 'Seg-Sex: 6h-12h, 17h-22h; Sáb: 8h-12h', 'Musculação, Zumba');
-
-INSERT INTO Residencia (ponto_de_interesse_id, usuario_id) VALUES
-    (1, 1),
-    (2, 2),
-    (3, 3),
-    (4, 4);
 
 INSERT INTO Evento (ponto_de_lazer_id, nome, inicio, fim) VALUES
     (1, 'Festival de Comida', '2023-07-20 18:00:00', '2023-07-20 22:00:00'),
@@ -168,7 +171,14 @@ INSERT INTO Evento (ponto_de_lazer_id, nome, inicio, fim) VALUES
 INSERT INTO Usuario (nome_de_usuario, email, data_de_nascimento) VALUES
     ('user1', 'user1@example.com', '1990-05-15'),
     ('user2', 'user2@example.com', '1985-12-01'),
-    ('user3', 'user3@example.com', '1998-07-08');
+    ('user3', 'user3@example.com', '1983-11-21'),
+    ('user4', 'user4@example.com', '1998-07-08');
+
+INSERT INTO Residencia (ponto_de_interesse_id, usuario_id) VALUES
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4);
 
 INSERT INTO UsuarioAvaliador (usuario_id, nome_publico) VALUES
     (1, 'Avaliador1'),
@@ -203,4 +213,3 @@ INSERT INTO RelacaoGeografica (id_pdi_origem, id_pdi_destino, distancia, tempo_d
     (1, 3, 2000.00, '00:20:00', 'Tem convenio'),
     (2, 1, 1500.00, '00:12:00', 'Dentro do local'),
     (3, 2, 1000.00, '00:10:00', 'Proximidade');
-
