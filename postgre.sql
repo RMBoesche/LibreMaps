@@ -199,8 +199,8 @@ INSERT INTO Classificacao (id_estabelecimento, id_categoria) VALUES
     (4, 2);
 
 INSERT INTO RelacaoGeografica (id_pdi_origem, id_pdi_destino, distancia, tempo_de_viagem, tipo_de_relacao) VALUES
-    (1, 2, 1500.00, '00:15:00', 'A pé'),
-    (1, 3, 2000.00, '00:20:00', 'A pé'),
-    (2, 1, 1500.00, '00:12:00', 'A pé'),
-    (3, 2, 1000.00, '00:10:00', 'A pé');
+    (1, 2, 1500.00, '00:15:00', 'Proximidade'),
+    (1, 3, 2000.00, '00:20:00', 'Tem convenio'),
+    (2, 1, 1500.00, '00:12:00', 'Dentro do local'),
+    (3, 2, 1000.00, '00:10:00', 'Proximidade');
 
